@@ -10,7 +10,7 @@ import "./Interfaces/IDriver.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract CryptoCabEscrow {
-    address public moderator;
+    address public moderator; 
     uint256 public currentRideId;
     IUser public user;
     IDriver public driver;

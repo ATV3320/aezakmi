@@ -1,0 +1,19 @@
+@import "./src/assets/theme/_var.scss";
+
+body {
+  font-family: $font;
+}
+
+img {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-bottom: 0;
+}
