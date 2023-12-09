@@ -14,6 +14,13 @@ interface IDriver {
         bool onRide;
         uint whenRideStartedEnded;
     }
+    enum Rating {
+        VeryBad,
+        Bad,
+        Fair,
+        Good,
+        Excellent
+    }
 
     function driverDetails(
         address driver
@@ -32,7 +39,10 @@ interface IDriver {
     function isDriverRegistered(
         address user
     ) external view returns (bool answer);
+
     function changeOnRideStatus(address driver) external;
+
+    function updateRating(address user, Rating x) external;
 
     function overrideRideToggle() external;
 }

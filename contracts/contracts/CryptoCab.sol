@@ -340,7 +340,18 @@ contract Escrow {
         }
     }
 
-    function rate(uint rideId, Rating _rating) external {
-        
-    }
+    // function rate(uint rideId, Rating _rating) external {
+    //     rideDetails storage x = ridedetails[rideId];
+    //     if(msg.sender == x.driver && !x.userRated)   {
+    //         x.driverToUser = _rating;
+    //         x.userRated = true;
+    //         driver.updateRating(x.customer, _rating);
+    //     }
+    //     else if(msg.sender == x.customer){
+    //         //rate driver
+    //     }
+    //     else{
+    //         revert InvalidCall();
+    //     }
+    // }
 }
