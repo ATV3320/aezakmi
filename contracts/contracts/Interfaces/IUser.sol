@@ -17,6 +17,8 @@ interface IUser {
     function customerDetails(address customer) external view returns (UserInfo memory);
 
     function Register(string memory name, bytes32 aadharHash) external;
+    function isCustomerOnRide(address user) external view returns(bool answer);
+    function isCustomerRegistered(address user) external view returns(bool answer);
 
     function addToWallet(uint amount) external;
 

@@ -9,8 +9,7 @@ import "./Interfaces/IDriver.sol";
 // import "./Iinr.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract CryptoCabEscrow {
-    address public moderator; 
+contract Escrow {
     uint256 public currentRideId;
     IUser public user;
     IDriver public driver;
@@ -40,6 +39,15 @@ contract CryptoCabEscrow {
         Good,
         Excellent
     }
+    struct UserInfo {
+        bool registered;
+        string name;
+        string aadharHash;
+        uint totalRides;
+        uint rating;
+        bool onRide;
+        uint whenRideStartedEnded;
+    }
     struct rideDetails {
         uint lockedAmount;
         address driver;
@@ -66,16 +74,14 @@ contract CryptoCabEscrow {
     event rideStageChanged(uint rideId, RideStage newRideStage);
     event moneySettled(uint rideId, address receiver, uint amount);
 
-    mapping(uint256 => rideDetails) ridedetails;
-    mapping(uint256 => bool) ongoingRide;
+    mapping(uint256 => rideDetails) public ridedetails;
+    mapping(uint256 => bool) public ongoingRide;
 
     constructor(
         address _user,
         address _driver,
-        address _inr,
-        address _moderator
+        address _inr
     ) {
-        moderator = _moderator;
         user = IUser(_user);
         driver = IDriver(_driver);
         inr = IERC20(_inr);
@@ -86,7 +92,7 @@ contract CryptoCabEscrow {
         uint rideDistance,
         uint rideTime
     ) public pure returns (uint) {
-        uint answer = 30 + rideDistance * 12;
+        uint answer = 30 + rideDistance * 12 / 1000;
         //calculating that average speed is > 40kph or not
         if (rideDistance * 9 > rideTime * 100) {
             return answer;
@@ -145,23 +151,24 @@ contract CryptoCabEscrow {
         uint rideTime,
         RideUrgency _rideUrgency
     ) external {
-        require(
-            user.customerDetails(msg.sender).registered &&
-                !user.customerDetails(msg.sender).onRide,
-            "Invalid rider, or still on ride"
-        );
+
+        // require(
+        //     user.isCustomerOnRide(msg.sender) &&
+        //         !user.isCustomerRegistered(msg.sender),
+        //     "Invalid rider, or still on ride"
+        // );
         uint amount = fareCalculator(rideDistance, rideTime);
 
         if (_rideUrgency == RideUrgency.High) {
             amount = (amount * 17) / 10;
-            inr.transferFrom(msg.sender, address(this), amount);
+            // inr.transferFrom(msg.sender, address(this), amount);
         } else if (_rideUrgency == RideUrgency.Medium) {
             amount = (amount * 15) / 10;
-            inr.transferFrom(msg.sender, address(this), amount);
+            // inr.transferFrom(msg.sender, address(this), amount);
         } else {
             amount = (amount * 13) / 10;
-            inr.transferFrom(msg.sender, address(this), amount);
         }
+            inr.transferFrom(msg.sender, address(this), amount);
         ongoingRide[currentRideId] = true;
         ridedetails[currentRideId] = rideDetails(
             amount,
@@ -225,11 +232,11 @@ contract CryptoCabEscrow {
     }
 
     function acceptRide(uint rideId) external {
-        require(
-            driver.driverDetails(msg.sender).registered &&
-                !driver.driverDetails(msg.sender).onRide,
-            "either not registered or on ride"
-        );
+        // require(
+        //     driver.driverDetails(msg.sender).registered &&
+        //         !driver.driverDetails(msg.sender).onRide,
+        //     "either not registered or on ride"
+        // );
         if (ridedetails[rideId].driver == ridedetails[rideId].customer) {
             ridedetails[rideId].driver = msg.sender;
             ridedetails[rideId].ridestage = RideStage.driverOnTheWay;
@@ -333,8 +340,7 @@ contract CryptoCabEscrow {
     }
 
     function rate(uint rideId, Rating _rating) external {
-        //checks if the person is rider then rate the driver of the ride
-        //if the caller is driver, then we rate the rider.
+        
         
     }
 }

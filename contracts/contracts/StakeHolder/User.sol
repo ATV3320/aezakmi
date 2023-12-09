@@ -33,14 +33,27 @@ contract User {
 
     mapping(address => mapping(address=>bool)) public whitelistedEscrow;
 
-    constructor(address _mainEscrow){
-        mainEscrow = _mainEscrow;
+    constructor(){
         admin = msg.sender;
+    }
+
+    function isCustomerOnRide(address user) external view returns(bool answer){
+        return customerDetails[user].onRide;
+    }
+
+    function isCustomerRegistered(address user) external view returns(bool answer){
+        return customerDetails[user].registered;
+    }
+
+    function setEscrow(address _mainEscrow) external{ 
+        require(msg.sender == admin, "only admin");
+        mainEscrow = _mainEscrow;
     }
     function Register(address user, string memory name, string memory aadharHash) external {
         if(msg.sender == admin){
         UserInfo storage detail = customerDetails[user];
         require(!adharPresent[aadharHash], "Identity already present");
+        detail.registered = true;
         detail.name = name;
         detail.aadharHash = aadharHash;
         adharPresent[aadharHash] = true;

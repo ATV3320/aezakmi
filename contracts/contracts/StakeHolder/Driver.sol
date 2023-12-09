@@ -9,7 +9,7 @@ contract Driver {
     struct DriverDetails {
         bool registered;
         string name;
-        bytes32 aadharHash;
+        string aadharHash;
         string vehicle_Number;
         uint totalRides;
         uint rating;
@@ -30,13 +30,17 @@ contract Driver {
 
     mapping(address=>mapping(address=>bool)) public whitelistedEscrow;
 
-    constructor(address _mainEscrow) {
-        mainEscrow = _mainEscrow;
+    constructor(){
         admin = msg.sender;
     }
 
+    function setEscrow(address _mainEscrow) external{ 
+        require(msg.sender == admin, "only admin");
+        mainEscrow = _mainEscrow;
+    }
+
     //mapping to store the adharHash occurance
-    mapping(bytes32 => bool) adharPresent;
+    mapping(string => bool) adharPresent;
     mapping(string => bool) vehiclePresent;
 
     // we have to create 2 mappings confirming the presence of IDs and vehicles
@@ -46,7 +50,7 @@ contract Driver {
     function Register(
         address driver,
         string memory name,
-        bytes32 aadharHash,
+        string memory aadharHash,
         string memory vehicle_number
     ) external {
         if(msg.sender == admin){
