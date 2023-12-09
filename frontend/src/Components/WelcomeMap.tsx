@@ -35,9 +35,20 @@ function WelcomeMap() {
 	const count = useSelector((state: any) => state.counter);
 	const { sourceRedux, destinationRedux } = useSelector((state: any) => state.map);
 	const [renderComponent, setRenderComponent] = useState<any>(<></>)
-	const riderInfo = useSelector(state => state)
-	console.log("ri", riderInfo);
+	const riderInfo:{userKey:any,map:any} = useSelector((state:any) => state)
+	console.log("ri", Object.keys(riderInfo));
+    const [ridersPrivateKey,setridersPrivateKey]=useState<any>(localStorage.getItem("pkey"))
+console.log("rpkey",ridersPrivateKey);
 
+// useEffect(()=>{
+// if(riderInfo)
+// {
+// 	console.log("riderInfo",riderInfo.userKey);
+// 	if(riderInfo.userKey){
+// 		setridersPrivateKey(riderInfo.userKey.data.privateKey)
+// 	}
+// }
+// },[riderInfo])
 	const { isLoaded } = useJsApiLoader({
 		googleMapsApiKey: "AIzaSyD4k84CohF6qr_AMbtK_AKR7EpES6JueDE",
 		libraries: ['places'],
@@ -81,12 +92,16 @@ function WelcomeMap() {
 	console.log("roomid", ROOMID);
 	console.log(inputroom);
 
+useEffect(()=>{
+	initialize(ProjectID);
+},[])
+
 	useEffect(() => {
 		// its preferable to use env vars to store projectId
-		initialize(ProjectID);
-		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"currentRideId",[])
+if(ridersPrivateKey)
+		callContractsMethods(ridersPrivateKey, AscroAddress, AscroAbi, "currentRideId", [])
 
-	}, []);
+	}, [ridersPrivateKey]);
 
 	useEffect(() => {
 		if (isInitialized) {
@@ -155,8 +170,8 @@ function WelcomeMap() {
 	const [localSource, setLocalSource] = useState<any>("")
 	const [localDestination, setLocalDestination] = useState<any>("")
 	const [chatOrMap, setChatOrMap] = useState(true)
-    const [distanceMeters,setDistanceMeters]=useState("")
-    const [durationseconds,setdurationseconds]=useState("")
+	const [distanceMeters, setDistanceMeters] = useState("")
+	const [durationseconds, setdurationseconds] = useState("")
 
 	const nextSource = async (data: any, datadest: any) => {
 		dispatch(setSourceRedux(data.current.value))
@@ -175,7 +190,7 @@ function WelcomeMap() {
 		setDistance(results.routes[0].legs[0].distance.text)
 		setDuration(results.routes[0].legs[0].duration.text)
 		setStep(step + 1)
-		console.log("dist",results.routes[0].legs[0].duration.value,results.routes[0].legs[0].distance.value);
+		console.log("dist", results.routes[0].legs[0].duration.value, results.routes[0].legs[0].distance.value);
 		setDistanceMeters(results.routes[0].legs[0].distance.value)
 		setdurationseconds(results.routes[0].legs[0].duration.value)
 	}
@@ -206,17 +221,28 @@ function WelcomeMap() {
 			localSource,
 			localDestination,
 			roomId: ROOMID,
-			me: me
+			me: me, rideCount: rideCount
 		});
-		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bookRide",[distanceMeters,durationseconds,1])
-		
+		if (rideCount)
+			callContractsMethods(ridersPrivateKey, AscroAddress, AscroAbi, "bookRide", [distanceMeters, durationseconds, 1])
+		else
+			console.log("ride count not initialize");
+
 		nextSourceJustName(localSource, localDestination)
 	}
 
+	const [rideCount, setRideCount] = useState(0)
+	console.log("ridecount", rideCount);
 
+	const callcount = async () => {
+		const result: any = await callContractsMethodsRead(ridersPrivateKey, AscroAddress, AscroAbi, "currentRideId", [])
+		if (result) {
+			setRideCount(Number(result))
+		}
+	}
 
 	useEffect(() => {
-		callContractsMethodsRead("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"currentRideId",[])
+		callcount()
 		setSocket(io('http://localhost:8080'))
 	}, [])
 
@@ -232,9 +258,12 @@ function WelcomeMap() {
 			if (data.type == "driverReachedToPick") {
 				console.log("driverReachedToPick");
 				console.log(data?.myData.localSource, "----", data?.myData.localDestination);
+				console.log("ride ji",data);
+				
+				callContractsMethods(ridersPrivateKey, AscroAddress, AscroAbi, "bothMet", [data.rcount, true])
 
 				setStep(5)
-				callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bothMet",[1,true])
+			
 
 				setTimeout(async () => {
 					const directionsService = new google.maps.DirectionsService()
@@ -440,7 +469,7 @@ function WelcomeMap() {
 	return (
 		<>
 			<main className={styles.layout}>
-				<Sidebar/>
+				<Sidebar />
 				<Container fluid>
 					<div className={styles.layout_in}>
 						<>

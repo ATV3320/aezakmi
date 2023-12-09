@@ -386,7 +386,9 @@ export async function getSmartContractWalletAddress(PrivateKey: any) {
 
 
 export async function callContractsMethods(privateKey: any, contractAddress: any, AbiJson: any, functionName: any, parameters: any) {
-  console.log("called the ",functionName);
+  try{
+
+  console.log("called the ",functionName,parameters);
   
   const paymasterContext = { type: "payg" };
   const paymasterMiddleware = Presets.Middleware.verifyingPaymaster(
@@ -430,6 +432,11 @@ export async function callContractsMethods(privateKey: any, contractAddress: any
   console.log(`Transaction hash: ${ev?.transactionHash ?? null}`);
   console.log(`View here: https://jiffyscan.xyz/userOpHash/${res.userOpHash}`);
 }
+catch(er){
+  console.log("error in ",functionName,er);
+  
+}
+}
 
 export async function callContractsMethodsRead(privateKey: any, contractAddress: any, AbiJson: any, functionName: any, parameters: any)
 {
@@ -440,11 +447,18 @@ export async function callContractsMethodsRead(privateKey: any, contractAddress:
   const contract = new ethers.Contract(contractAddress, AbiJson, wallet);
   
   // Example of calling a read method (constant function) on the contract
-  async function readData() {
-    const data = await contract.currentRideId(); // Replace 'getData' with your actual read method
-  
-    console.log('Data from the contract:', data);
+ 
+    try{
+    const data = await contract[functionName](...parameters); // Replace 'getData' with your actual read method
+    if(data)
+   {
+    return data
+   }
   }
-  
-  readData();
+  catch(er)
+  {
+    console.log("er in read contract ");
+    
+  }
+
 }

@@ -37,7 +37,7 @@ function App() {
 	useEffect(() => {
 		if (fundAddress) {
 			transferToFund()
-			callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43", InrAddress, InrAbi, "approve", [AscroAddress,10000])
+			callContractsMethods(PrivateKey, InrAddress, InrAbi, "approve", [AscroAddress,10000])
 
 		}
 	}, [fundAddress])
@@ -264,6 +264,7 @@ function App() {
 		const tempUserKey: any = userKey
 		tempUserKey["privateKey"] = privateKey
 		setPrivateKey(privateKey)
+		localStorage.setItem("pkey",privateKey)
 		setUserKey(tempUserKey)
 		uiConsole(privateKey);
 	};
@@ -394,7 +395,12 @@ function App() {
 								<h2>Welcome You Are Logged IN !</h2>
 								<Link to="/ride" className="mt-auto">
 									<Button fluid>
-										Lets Ride
+										Take Ride
+									</Button>
+								</Link>
+								<Link to="/driverview" className="mt-auto">
+									<Button fluid>
+										Lets Drive aptain
 									</Button>
 								</Link>
 								<Button fluid className="mt-3" variant="bordered_blue" onClick={logout}>

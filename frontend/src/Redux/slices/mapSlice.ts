@@ -7,7 +7,9 @@ const mapSlice = createSlice({
   initialState: {
     sourceRedux: "",
     destinationRedux: "",
-    chatHistory:["hello ji","han ji sir bolo"]
+    chatHistory:["hello ji","han ji sir bolo"],
+    riderskey:"",
+    driverskey:"",
   },
   reducers: {
     setSourceRedux: (state, action) => {
@@ -20,6 +22,10 @@ const mapSlice = createSlice({
       console.log("history getting saved",action.payload);
       
       state.chatHistory = action.payload;
+    },
+    setriderskeyredux: (state: any, action: any) => {
+      
+      state.riderskey = action.payload;
     },
   },
 });

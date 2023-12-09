@@ -36,6 +36,7 @@ const DriverView = () => {
 	const count = useSelector((state: any) => state.counter);
 	const { sourceRedux, destinationRedux } = useSelector((state: any) => state.map);
 	const [renderComponent, setRenderComponent] = useState<any>(<></>)
+    const [ridersPrivateKey,setridersPrivateKey]=useState<any>(localStorage.getItem("pkey"))
 
 	const APIKEY = "LhdzYNjP0w-YuvD2ko9hT_mX1mk2VA6y"
 	const ProjectID = "6rdDYKc5_cm6w1t4H5C0wp_nOI84Z_8H"
@@ -167,10 +168,10 @@ const DriverView = () => {
 			setDuration(results.routes[0].legs[0].duration.text)
 			setStep(step + 1)
 		}, 1000)
-		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bothMet",[1,true])
+		callContractsMethods(ridersPrivateKey,AscroAddress,AscroAbi,"bothMet",[rideCount,true])
 
 		socket?.emit('sendMessage', {
-			type: "driverReachedToPick", myData
+			type: "driverReachedToPick", myData,rcount:rideCount
 		});
 	}
 
@@ -178,16 +179,19 @@ const DriverView = () => {
 		setSocket(io('http://localhost:8080'))
 	}, [])
 	const [myData, setMyData] = useState<any>({})
+	const [rideCount,setRideCount]=useState(0)
+	
 	useEffect(() => {
 		socket?.on('getMessage', (data: any) => {
 			console.log(data);
 			setriderpeerID(String(data.me?.meId).replace("peerId-",""))
 			
 			if (data.type == "requestDriver") {
-				callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"acceptRide",[0])
+				callContractsMethods(ridersPrivateKey,AscroAddress,AscroAbi,"acceptRide",[data.rideCount])
 				joinLobby(data.roomId)
 				setROOMID(data.roomId)
 				setMyData(data)
+				setRideCount(data.rideCount)
 			}
 		})
 	}, [socket])

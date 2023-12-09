@@ -14,8 +14,10 @@ import SocketTest from './Components/SocketTest';
 import AnonAdhar from './Components/AnonAdhar';
 import { log } from '@web3auth/base';
 import Huddle from './Components/Huddle';
+import AppMe from './src/App';
 import ChatComponent from './Components/ChatComponent';
 import { AnonAadhaarProvider } from 'anon-aadhaar-react';
+import Start from './Components/Start';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -33,10 +35,12 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/start" element={<Start />} />
         <Route path="/ride" element={<Entry />} />
         <Route path="/driverview" element={<DriverView />} />
         <Route path="/paymaster" element={<SocketTest />} />
         <Route path="/anon" element={<AnonAdhar />} />
+        <Route path="/safe" element={<AppMe />} />
         <Route path="/test" element={<ChatComponent />} />
         <Route path="/huddle" element={<Huddle />} />
       </Routes>

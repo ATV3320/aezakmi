@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { nanoid } from "nanoid";
 import { LogInWithAnonAadhaar, useAnonAadhaar,AnonAadhaarProof } from "anon-aadhaar-react";
+import axios from 'axios';
 
 
 
@@ -10,27 +11,33 @@ const AnonAdhar = () => {
   const [anonAadhaar] = useAnonAadhaar();
   useEffect(() => {
       console.log("Anon Aadhaar status: ", anonAadhaar.status);
+      if(anonAadhaar?.status === "logged-in"){
+axios.post("http://localhost:8000/api/v1/upload_proof",JSON.stringify(anonAadhaar.pcd, null, 2)).
+then((res)=>{
+  console.log("res",res);
+}).catch((er:any)=>{console.log("err",er);
+})
+      }
     }, [anonAadhaar]);
 
   return (
 
       
-      <div className="min-h-screen bg-gray-100 px-4 py-8">
-      <main className="flex flex-col items-center gap-8 bg-white rounded-2xl max-w-screen-sm mx-auto h-[24rem] md:h-[20rem] p-8">
-        <h1 className="font-bold text-2xl">Welcome to Anon Aadhaar Example</h1>
-        <p>Prove your Identity anonymously using your Aadhaar card.</p>
+      <div style={{textAlign:"center",display:"flex",justifyContent:"center",flexDirection:"column"}}>
+   
+        {anonAadhaar?.status !== "logged-in" ?
+          <>
+                   <LogInWithAnonAadhaar />
 
-        {/* Import the Connect Button component */}
-        <LogInWithAnonAadhaar />
-      </main>
+           
+          </>:<></>
+        }
       <div className="flex flex-col items-center gap-4 rounded-2xl max-w-screen-sm mx-auto p-8">
         {/* Render the proof if generated and valid */}
         {anonAadhaar?.status === "logged-in" && (
           <>
             <p>✅ Proof is valid</p>
-            <p>Got your Aadhaar Identity Proof</p>
-            <>Welcome anon!</>
-            <AnonAadhaarProof code={JSON.stringify(anonAadhaar.pcd, null, 2)} />
+           
           </>
         )}
       </div>
