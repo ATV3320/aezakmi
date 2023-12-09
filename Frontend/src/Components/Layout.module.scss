@@ -1,0 +1,142 @@
+@import "../src/assets/theme/_var.scss";
+
+.layout {
+    .layout_in {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding: 15px 0;
+
+        .map {
+            height: 100% !important;
+            flex-grow: 1;
+            border-radius: 12px;
+        }
+
+        .input {
+            height: 54px;
+            border: 1px solid $primary;
+            border-radius: 12px;
+            width: 100%;
+            padding-inline: 20px;
+            font-size: 16px;
+            outline: none;
+
+            &:focus {
+                outline: 1px solid $primary;
+            }
+
+            &:disabled {
+                pointer-events: none;
+                opacity: 0.7;
+            }
+        }
+
+        .chat_box {
+            background-color: rgb(245 229 229);
+            padding: 10px;
+            border-radius: 12px;
+            position: relative;
+flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+
+            .chat_box_in {
+                max-height: calc(100vh - 400px);
+                overflow-y: auto;
+
+                .message {
+                    margin-bottom: 10px;
+
+                    p {
+                        padding: 10px;
+                        border-radius: 12px;
+                        background-color: white;
+                        width: max-content;
+                        max-width: 80%;
+
+                        &.sent {
+                            margin-left: auto;
+                        }
+
+                        &:not(.sent) {
+                            background-color: rgba($primary, 0.1);
+                        }
+                    }
+                }
+            }
+
+            .chat_box_action {
+                display: flex;
+                align-items: center;
+                margin-top: auto;
+
+                button {
+                    width: 54px;
+                    padding: 0;
+                    flex-shrink: 0;
+                    margin-left: 10px;
+                }
+            }
+        }
+
+
+        .layout_footer {
+            padding-top: 15px;
+            margin-top: auto;
+
+            .select_source {
+                .select_source_input {
+                    >* {
+                        &:not(:last-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            .source_confirmation {
+                .source_confirmation_in {
+                    >* {
+                        &:not(:last-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            .driver_reached {
+                .driver_reached_in {
+                    >* {
+                        &:not(:last-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            .reached_or_not {
+                .reached_or_not_input {
+
+                    >* {
+                        &:not(:last-child) {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+
+            .action {
+                display: flex;
+                align-items: center;
+                margin-top: 10px;
+
+                >button {
+                    &:not(:last-child) {
+                        margin-right: 08px;
+                    }
+                }
+            }
+        }
+    }
+}

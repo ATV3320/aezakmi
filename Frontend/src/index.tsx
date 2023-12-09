@@ -2,12 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Entry from './Components/Entry';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css'; // Use the correct path for your project
 import './index.scss';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import DriverView from './Components/DriverView';
+import AnonAdhar from './Components/AnonAdhar';
+import ChatComponent from './Components/ChatComponent';
 
 import { AnonAadhaarProvider } from 'anon-aadhaar-react';
 import SocketTest from './Components/SocketTest';
@@ -28,7 +32,10 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/ride" element={<Entry />} />
+        <Route path="/driverview" element={<DriverView />} />
         <Route path="/paymaster" element={<SocketTest />} />
+        <Route path="/anon" element={<AnonAdhar />} />
 
        
       </Routes>
