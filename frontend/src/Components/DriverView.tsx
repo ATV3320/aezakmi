@@ -24,6 +24,8 @@ import axios from 'axios';
 import { Container } from 'react-bootstrap';
 import Button from '../src/components/Button/Button';
 import Sidebar from '../src/components/Sidebar/Sidebar';
+import { callContractsMethods } from './main';
+import { AscroAbi, AscroAddress } from '../Constants/Constants';
 const DriverView = () => {
 	const riderInfo = useSelector(state => state)
 	console.log("ri", riderInfo);
@@ -165,6 +167,7 @@ const DriverView = () => {
 			setDuration(results.routes[0].legs[0].duration.text)
 			setStep(step + 1)
 		}, 1000)
+		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bothMet",[1,true])
 
 		socket?.emit('sendMessage', {
 			type: "driverReachedToPick", myData
@@ -181,6 +184,7 @@ const DriverView = () => {
 			setriderpeerID(String(data.me?.meId).replace("peerId-",""))
 			
 			if (data.type == "requestDriver") {
+				callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"acceptRide",[0])
 				joinLobby(data.roomId)
 				setROOMID(data.roomId)
 				setMyData(data)

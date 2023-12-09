@@ -25,6 +25,8 @@ import { log } from '@web3auth/base';
 import { Container } from 'react-bootstrap';
 import Button from '../src/components/Button/Button';
 import Sidebar from '../src/components/Sidebar/Sidebar';
+import { callContractsMethods, callContractsMethodsRead, callMethods } from './main';
+import { AscroAbi, AscroAddress } from '../Constants/Constants';
 
 function WelcomeMap() {
 	//bengaluru latitude and longitude
@@ -82,6 +84,8 @@ function WelcomeMap() {
 	useEffect(() => {
 		// its preferable to use env vars to store projectId
 		initialize(ProjectID);
+		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"currentRideId",[])
+
 	}, []);
 
 	useEffect(() => {
@@ -151,6 +155,8 @@ function WelcomeMap() {
 	const [localSource, setLocalSource] = useState<any>("")
 	const [localDestination, setLocalDestination] = useState<any>("")
 	const [chatOrMap, setChatOrMap] = useState(true)
+    const [distanceMeters,setDistanceMeters]=useState("")
+    const [durationseconds,setdurationseconds]=useState("")
 
 	const nextSource = async (data: any, datadest: any) => {
 		dispatch(setSourceRedux(data.current.value))
@@ -169,6 +175,9 @@ function WelcomeMap() {
 		setDistance(results.routes[0].legs[0].distance.text)
 		setDuration(results.routes[0].legs[0].duration.text)
 		setStep(step + 1)
+		console.log("dist",results.routes[0].legs[0].duration.value,results.routes[0].legs[0].distance.value);
+		setDistanceMeters(results.routes[0].legs[0].distance.value)
+		setdurationseconds(results.routes[0].legs[0].duration.value)
 	}
 
 	const nextSourceJustName = async (data: any, datadest: any) => {
@@ -199,12 +208,15 @@ function WelcomeMap() {
 			roomId: ROOMID,
 			me: me
 		});
+		callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bookRide",[distanceMeters,durationseconds,1])
+		
 		nextSourceJustName(localSource, localDestination)
 	}
 
 
 
 	useEffect(() => {
+		callContractsMethodsRead("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"currentRideId",[])
 		setSocket(io('http://localhost:8080'))
 	}, [])
 
@@ -222,6 +234,7 @@ function WelcomeMap() {
 				console.log(data?.myData.localSource, "----", data?.myData.localDestination);
 
 				setStep(5)
+				callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43",AscroAddress,AscroAbi,"bothMet",[1,true])
 
 				setTimeout(async () => {
 					const directionsService = new google.maps.DirectionsService()

@@ -10,13 +10,12 @@ import { Provider } from 'react-redux';
 import store from './Redux/store';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DriverView from './Components/DriverView';
+import SocketTest from './Components/SocketTest';
 import AnonAdhar from './Components/AnonAdhar';
 import { log } from '@web3auth/base';
 import Huddle from './Components/Huddle';
 import ChatComponent from './Components/ChatComponent';
-
 import { AnonAadhaarProvider } from 'anon-aadhaar-react';
-import SocketTest from './Components/SocketTest';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

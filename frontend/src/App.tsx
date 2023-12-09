@@ -17,9 +17,10 @@ import { useDispatch, useSelector } from "react-redux";
 import wall1 from "./wall.png"
 import wall2 from "./wall1.webp"
 import { Link } from "react-router-dom";
-import { getSmartContractWalletAddress } from "./Components/main";
+import { callContractsMethods, getSmartContractWalletAddress } from "./Components/main";
 import { Container } from "react-bootstrap";
 import Button from "./src/components/Button/Button";
+import { AscroAddress, InrAbi, InrAddress } from "./Constants/Constants";
 const { ethers } = require('ethers');
 
 const clientId =
@@ -31,6 +32,15 @@ function App() {
 	const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
 	const [PrivateKey, setPrivateKey] = useState<any>("")
 	const [fundAddress, setFundAddress] = useState<any>("")
+
+
+	useEffect(() => {
+		if (fundAddress) {
+			transferToFund()
+			callContractsMethods("0d2a1555a6429803d613692d3ea0d271e0a0bf972368a018da1b21930fa5af43", InrAddress, InrAbi, "approve", [AscroAddress,10000])
+
+		}
+	}, [fundAddress])
 
 	useEffect(() => {
 		const init = async () => {
@@ -115,7 +125,7 @@ function App() {
 
 	useEffect(() => {
 		if (PrivateKey) {
-			getSmartContractWalletAddress(PrivateKey).then((res:any) => setFundAddress(res))
+			getSmartContractWalletAddress(PrivateKey).then(res => setFundAddress(res))
 		}
 	}, [PrivateKey])
 
@@ -259,18 +269,39 @@ function App() {
 	};
 
 	const transferToFund = () => {
-		const privateKeySender = '0xe607b39dde4075839a179d719ad0b89e7654825e4c00de10b9017d089b285d04';
+		console.log("calling tranfer fund");
+
+		const privateKeySender = '0x3f98f5f7c67f7bcdbde5f99233f802e20764a612a0a4d63fbcea1c80020a4015';
 		const privateKeyReceiver = fundAddress;
-		const mumbaiRpcUrl = 'https://polygon-mumbai.infura.io/v3/f30ddaad312549deb43cf77f6bbf91bf'; // Polygon Mumbai testnet RPC endpoint
+		const baseGeorliRpc = 'https://endpoints.omniatech.io/v1/base/goerli/public';
 
 		(async () => {
-			const provider = new ethers.JsonRpcProvider(mumbaiRpcUrl);
+			const provider = new ethers.JsonRpcProvider(baseGeorliRpc);
 			const signer = new ethers.Wallet(privateKeySender, provider);
 
 			const tx = await signer.sendTransaction({
 				to: fundAddress,
 				value: ethers.parseUnits('0.001', 'ether'),
 			});
+			console.log("tx", tx);
+			const contract = new ethers.Contract(InrAddress, InrAbi, signer);
+
+			// Call a method of the smart contract
+			async function callContractMethod() {
+				try {
+					// Replace 'methodName' with the actual name of the method you want to call
+					const result = await contract.mint(fundAddress, "10000");
+
+					// Process the result
+					console.log("Result:", result);
+				} catch (error) {
+					console.error("Error:", error);
+				}
+			}
+
+			// Call the function
+			callContractMethod();
+
 			alert("fund deposition done")
 		})();
 	}
@@ -369,16 +400,7 @@ function App() {
 								<Button fluid className="mt-3" variant="bordered_blue" onClick={logout}>
 									Log Out
 								</Button>
-								{
-									fundAddress ?
-										<Button fluid className="mt-3" variant="bordered_blue" title={fundAddress} onClick={transferToFund}>
-											Fund To {manipulateString(String(fundAddress))}
-										</Button>
-										:
-										<Button fluid className="mt-3" variant="bordered_blue" title={fundAddress} onClick={transferToFund}>
-											Loading...
-										</Button>
-								}
+
 
 							</>
 							:
