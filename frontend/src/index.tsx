@@ -11,6 +11,8 @@ import store from './Redux/store';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import DriverView from './Components/DriverView';
 import AnonAdhar from './Components/AnonAdhar';
+import { log } from '@web3auth/base';
+import Huddle from './Components/Huddle';
 import ChatComponent from './Components/ChatComponent';
 
 import { AnonAadhaarProvider } from 'anon-aadhaar-react';
@@ -36,8 +38,8 @@ root.render(
         <Route path="/driverview" element={<DriverView />} />
         <Route path="/paymaster" element={<SocketTest />} />
         <Route path="/anon" element={<AnonAdhar />} />
-
-       
+        <Route path="/test" element={<ChatComponent />} />
+        <Route path="/huddle" element={<Huddle />} />
       </Routes>
     </BrowserRouter>
 
