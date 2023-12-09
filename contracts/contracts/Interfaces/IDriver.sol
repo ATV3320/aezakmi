@@ -27,5 +27,12 @@ interface IDriver {
 
     function redeemMoney() external;
 
+    function isDriverOnRide(address user) external view returns (bool answer);
+
+    function isDriverRegistered(
+        address user
+    ) external view returns (bool answer);
+    function changeOnRideStatus(address driver) external;
+
     function overrideRideToggle() external;
 }

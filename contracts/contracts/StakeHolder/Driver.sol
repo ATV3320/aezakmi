@@ -34,6 +34,14 @@ contract Driver {
         admin = msg.sender;
     }
 
+    function isDriverOnRide(address driver) external view returns(bool answer){
+        return driverDetails[driver].onRide;
+    }
+
+    function isDriverRegistered(address driver) external view returns(bool answer){
+        return driverDetails[driver].registered;
+    }
+
     function setEscrow(address _mainEscrow) external{ 
         require(msg.sender == admin, "only admin");
         mainEscrow = _mainEscrow;
@@ -64,6 +72,7 @@ contract Driver {
         detail.vehicle_Number = vehicle_number;
         adharPresent[aadharHash] = true;
         whitelistedEscrow[driver][mainEscrow] = true;
+        detail.registered = true;
         }
         else{
             revert UnauthorisedAccess();
@@ -105,7 +114,7 @@ contract Driver {
             driverDetails[user].rating = (driverDetails[user].rating + 5000)/driverDetails[user].totalRides;
         }
     }
-
+    
     function overrideRideToggle() external {
         if(driverDetails[msg.sender].onRide && driverDetails[msg.sender].whenRideStartedEnded - block.timestamp > 86400){
             driverDetails[msg.sender].onRide = false;
@@ -115,6 +124,4 @@ contract Driver {
             revert Uncallable();
         }
     }
-
-
 }

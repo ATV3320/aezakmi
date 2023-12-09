@@ -61,7 +61,10 @@ describe("checking end to end flow of our smart contracts", function () {
   it("Registers, gets money and lets me book the ride", async function () {
     //booking ride
     // console.log(await user.getCustomerDetails(owner.address));
+    const currentStats = await user.customerDetails(owner.address);
+      console.log("current stats for our user are:", currentStats);
     const result = await escrow.connect(owner).bookRide(100000, 9000, 1);
+    console.log("why is it failing/succeeding:", result);
     const bal = await inr.balanceOf(escrow.target);
 
     console.log("balance is", bal);

@@ -21,6 +21,7 @@ interface IUser {
     function isCustomerRegistered(address user) external view returns(bool answer);
 
     function addToWallet(uint amount) external;
+    function changeOnRideStatus(address user) external;
 
     function overrideRideToggle() external;
 }

@@ -152,12 +152,11 @@ contract Escrow {
         uint rideTime,
         RideUrgency _rideUrgency
     ) external {
-
-        // require(
-        //     user.isCustomerOnRide(msg.sender) &&
-        //         !user.isCustomerRegistered(msg.sender),
-        //     "Invalid rider, or still on ride"
-        // );
+        require(
+            !user.isCustomerOnRide(msg.sender) &&
+                user.isCustomerRegistered(msg.sender),
+            "Invalid rider, or still on ride"
+        );
         uint amount = fareCalculator(rideDistance, rideTime);
 
         if (_rideUrgency == RideUrgency.High) {
@@ -233,15 +232,16 @@ contract Escrow {
     }
 
     function acceptRide(uint rideId) external {
-        // require(
-        //     driver.driverDetails(msg.sender).registered &&
-        //         !driver.driverDetails(msg.sender).onRide,
-        //     "either not registered or on ride"
-        // );
+        require(
+            driver.isDriverRegistered(msg.sender) &&
+                !driver.isDriverOnRide(msg.sender),
+            "either not registered or on ride"
+        );
         if (ridedetails[rideId].driver == ridedetails[rideId].customer) {
             ridedetails[rideId].driver = msg.sender;
             ridedetails[rideId].ridestage = RideStage.driverOnTheWay;
             ridedetails[rideId].rideDuration = block.timestamp;
+            driver.changeOnRideStatus(msg.sender);
         } else {
             revert RiderAlreadyAssigned(ridedetails[rideId].driver);
         }
@@ -341,7 +341,6 @@ contract Escrow {
     }
 
     function rate(uint rideId, Rating _rating) external {
-        
         
     }
 }
