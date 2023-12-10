@@ -36,7 +36,7 @@ module.exports = {
     //base is actually base goerli for this project right now
     base: {
       chainId: 84531,
-      url: "https://goerli.base.org",
+      url: "https://api.stackup.sh/v1/node/daa15c8aecb343b5248dac4297a8e03130cf76c35f0e16a68d03da14b631b1c7",
       accounts: [process.env.PRIVATE_KEY],
     },
     base_mainnet: {

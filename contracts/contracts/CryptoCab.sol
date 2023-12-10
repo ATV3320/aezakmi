@@ -76,7 +76,7 @@ contract Escrow {
     event moneySettled(uint rideId, address receiver, uint amount);
 
     mapping(uint256 => rideDetails) public ridedetails;
-    mapping(uint256 => bool) public ongoingRide;
+    mapping(uint256 => uint8) public ongoingRide;
 
     constructor(
         address _user,
@@ -169,7 +169,7 @@ contract Escrow {
             amount = (amount * 13) / 10;
         }
             inr.transferFrom(msg.sender, address(this), amount);
-        ongoingRide[currentRideId] = true;
+        ongoingRide[currentRideId] = 1;
         ridedetails[currentRideId] = rideDetails(
             amount,
             msg.sender,
@@ -331,7 +331,7 @@ contract Escrow {
                 x.ridestage = RideStage.rideFinished;
                 fareDistributor(rideId, true);
                 //update the driver's portfolio in other contract from here
-                ongoingRide[currentRideId] = false;
+                ongoingRide[currentRideId] = 0;
             } else {
                 revert WrongState(x.ridestage);
             }

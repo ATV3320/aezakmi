@@ -84,12 +84,12 @@ router.post("/upload_proof",bodyParser.json(),async (req,res)=>{
     //    const response = await uploadEncryptedText(`${anon_json.data}`, apiKey, public_key, private_key);
        const response = await uploadEncryptedText(anon, apiKey, public_key, private_key);
 
+       await accessControl(response.data.Hash ,public_key,private_key);
 
        res.status(200).json({ 
         dataUploaded: true ,
         dataInfo : response.data.Hash
     });
-    await accessControl(response.data.Hash ,public_key,private_key);
 
     }catch(error){
         res.status(500).json({ 
