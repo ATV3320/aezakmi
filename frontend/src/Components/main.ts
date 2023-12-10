@@ -360,6 +360,8 @@ export async function bookride(privateKey: any, contractAddress: any, AbiJson: a
 }
 
 export async function getSmartContractWalletAddress(PrivateKey: any) {
+  console.log("pidd",PrivateKey);
+  
   const paymasterContext = { type: "payg" };
   const paymasterMiddleware = Presets.Middleware.verifyingPaymaster(
     paymasterUrl,

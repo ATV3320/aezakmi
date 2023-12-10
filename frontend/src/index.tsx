@@ -18,6 +18,7 @@ import AppMe from './src/App';
 import ChatComponent from './Components/ChatComponent';
 import { AnonAadhaarProvider } from 'anon-aadhaar-react';
 import Start from './Components/Start';
+import Webauth from './Webauth';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -43,6 +44,8 @@ root.render(
         <Route path="/safe" element={<AppMe />} />
         <Route path="/test" element={<ChatComponent />} />
         <Route path="/huddle" element={<Huddle />} />
+        <Route path="/register" element={<  Webauth />} />
+
       </Routes>
     </BrowserRouter>
 

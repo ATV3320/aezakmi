@@ -1,0 +1,16 @@
+.select-box-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .select-box {
+    padding: 8px;
+    font-size: 16px;
+    width: 200px;
+    margin-top: 8px;
+  }
+  
+  .select-box-container p {
+    margin-top: 16px;
+    font-weight: bold;
+  }

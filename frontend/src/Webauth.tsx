@@ -21,12 +21,13 @@ import { callContractsMethods, getSmartContractWalletAddress } from "./Component
 import { Container } from "react-bootstrap";
 import Button from "./src/components/Button/Button";
 import { AscroAddress, InrAbi, InrAddress } from "./Constants/Constants";
+import AnonAdhar from "./Components/AnonAdhar";
 const { ethers } = require('ethers');
 
 const clientId =
 	"BEglQSgt4cUWcj6SKRdu5QkOXTsePmMcusG5EAoyjyOYKlVRjIF1iCNnMOTfpzCiunHRrMui8TIwQPXdkQ8Yxuk"; // get from https://dashboard.web3auth.io
 
-function App() {
+function Webauth() {
 	const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
 	const [provider, setProvider] = useState<IProvider | null>(null);
 	const [loggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -393,37 +394,17 @@ function App() {
 					{
 						loggedIn ?
 							<>
-								<h2>Welcome You Are Logged In!</h2>
-								<Link to="/ride" className="mt-auto">
-									<Button fluid>
-										Take Ride
-									</Button>
-								</Link>
-								<br/>
-								<Link to="/driverview" className="mt-auto">
-									<Button  fluid >
-										Lets Drive Captain
-									</Button>
-								</Link>
-								<Button fluid className="mt-3" variant="bordered_blue" onClick={logout}>
-									Log Out
-								</Button>
+								<AnonAdhar fundAddress={fundAddress} PrivateKey={PrivateKey}/>
 
 
 							</>
 							:
 							<>
 								<h2>CryptoCab</h2>
-								<Link to="/register" className="mt-auto">
-								<Button className="mt-auto" fluid onClick={()=>{login("login")}}>
-									Login
-								</Button>
-								<br/>
-								<Button className="mt-2" fluid >
-									Register
-								</Button>
-								</Link >
 								
+								<Button className="mt-5" fluid onClick={()=>{login("login")}}>
+									Login with web3 auth first
+								</Button>
 							</>
 					}
 				</div>
@@ -432,4 +413,4 @@ function App() {
 	);
 }
 
-export default App;
+export default Webauth;

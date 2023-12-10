@@ -26,7 +26,7 @@ import { Container } from 'react-bootstrap';
 import Button from '../src/components/Button/Button';
 import Sidebar from '../src/components/Sidebar/Sidebar';
 import { callContractsMethods, callContractsMethodsRead, callMethods } from './main';
-import { AscroAbi, AscroAddress } from '../Constants/Constants';
+import { AscroAbi, AscroAddress, DriverAbi, driverContractAddress } from '../Constants/Constants';
 
 function WelcomeMap() {
 	//bengaluru latitude and longitude
@@ -96,10 +96,31 @@ useEffect(()=>{
 	initialize(ProjectID);
 },[])
 
+const cal=async()=>{
+	const a=await callContractsMethodsRead(ridersPrivateKey, AscroAddress, AscroAbi, "ridedetails", [22])
+	console.log("aa",a);
+	
+const dd=await callContractsMethodsRead(ridersPrivateKey,driverContractAddress,DriverAbi,"driverDetails",[a[1]])
+console.log("ddd",dd[2]);
+
+const res=await axios.post("http://localhost:8001/api/v1/verify_proof",{
+	"cid":dd[2]
+	
+  }).then((res)=>console.log("res",res)
+  ).catch((er)=>{
+	console.log("er",er);
+	
+  })
+
+}
+
+
+
 	useEffect(() => {
 		// its preferable to use env vars to store projectId
 if(ridersPrivateKey)
 		callContractsMethods(ridersPrivateKey, AscroAddress, AscroAbi, "currentRideId", [])
+		
 
 	}, [ridersPrivateKey]);
 

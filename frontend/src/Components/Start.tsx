@@ -17,7 +17,6 @@ const Start = () => {
                     {!showAnon?
                     
                     <div style={{ marginTop: 30 }}>
-                        <img src={loginimage} height={600}></img>
 
                         <div className={styles.source_confirmation}>
                             {/* <button onClick={()=>{ sendData([riderpeerID], { message: "Hello World" })}}>sss</button> */}
