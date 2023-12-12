@@ -80,7 +80,7 @@ const DriverView = () => {
 	}, [isInitialized])
 
 	const { isLoaded } = useJsApiLoader({
-		googleMapsApiKey: "AIzaSyD4k84CohF6qr_AMbtK_AKR7EpES6JueDE",
+		googleMapsApiKey: "<your-Google-Map API keys>",
 		libraries: ['places'],
 	})
 
